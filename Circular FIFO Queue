@@ -1,0 +1,84 @@
+import java.util.NoSuchElementException;
+
+public class CircularArrayQueue<E> {
+    private E[] queue;
+    private int front, rear, size, capacity;
+
+    // Constructor
+    public CircularArrayQueue(int capacity) {
+        this.capacity = capacity;
+        queue = (E[]) new Object[capacity];
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+
+    // Method to add an item to the queue
+    public void enqueue(E item) {
+        if (isFull()) {
+            resize();
+        }
+        rear = (rear + 1) % capacity; // Circular increment
+        queue[rear] = item;
+        size++;
+    }
+ // Method to remove an item from the queue
+    public E dequeue() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Queue is empty");
+        }
+        E item = queue[front];
+        front = (front + 1) % capacity; // Circular increment
+        size--;
+        return item;
+    }
+
+    // Method to check the front item of the queue
+    public E front() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Queue is empty");
+        }
+        return queue[front];
+    }
+
+    // Method to check if the queue is empty
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    // Method to check if the queue is full
+    public boolean isFull() {
+        return size == capacity;
+    }
+// Resize the array when it's full
+    private void resize() {
+        int newCapacity = capacity * 2;
+        E[] newArray = (E[]) new Object[newCapacity];
+        int index = 0;
+        for (int i = front; i != rear; i = (i + 1) % capacity) {
+            newArray[index++] = queue[i];
+        }
+        newArray[index] = queue[rear];
+        queue = newArray;
+        front = 0;
+        rear = size - 1;
+        capacity = newCapacity;
+    }
+
+    public static void main(String[] args) {
+        CircularArrayQueue<Integer> queue = new CircularArrayQueue<>(5);
+
+        queue.enqueue(1);
+        queue.enqueue(2);
+        queue.enqueue(3);
+        queue.enqueue(4);
+        queue.enqueue(5);
+        queue.enqueue(6); // Exceeds initial capacity, should resize
+
+        System.out.println("---------------------------------");
+        System.out.println("Front item is: " + queue.front());
+        System.out.println("Dequeued item is: " + queue.dequeue());
+        System.out.println("Front item is: " + queue.front());
+        System.out.println("---------------------------------");
+    }
+}
