@@ -1,0 +1,119 @@
+import java.util.NoSuchElementException;
+
+// Node class to represent each element in the queue
+class Node<T> {
+    T value;
+    Node<T> next;
+    Node<T> previous;
+
+    // Constructor to create a new node with given value
+    public Node(T value) {
+        this.value = value;
+        this.next = null;
+        this.previous = null;
+    }
+}
+
+// FIFO Queue implementation using a doubly linked list
+public class LinkedListQueue<T> {
+    private Node<T> head; // Front of the queue
+    private Node<T> tail; // Rear of the queue
+
+    // Constructor to create an empty queue
+    public LinkedListQueue() {
+        this.head = null;
+        this.tail = null;
+    }
+    // Method to add an element to the rear of the queue
+    public void enqueue(T value) {
+        Node<T> newNode = new Node<>(value);
+        if (head == null) {
+            head = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.previous = tail;
+        }
+        tail = newNode;
+        System.out.println("Added element: " + value);
+    }
+
+    // Method to remove an element from the front of the queue
+    public T dequeue() {
+        if (head == null) {
+            throw new NoSuchElementException("Queue is empty. Cannot remove element.");
+        }
+        T value = head.value;
+        head = head.next;
+        if (head == null) {
+            tail = null;
+        } else {
+            head.previous = null;
+        }
+        System.out.println("Removed element: " + value);
+        return value;
+    }
+ // Method to get the front element of the queue without removing it
+    public T peek() {
+        if (head == null) {
+            throw new NoSuchElementException("Queue is empty. Cannot peek.");
+        }
+        return head.value;
+    }
+
+    // Method to check if the queue is empty
+    public boolean isEmpty() {
+        return head == null;
+    }
+
+    // Method to print all elements in the queue
+    public void displayQueue() {
+        if (head == null) {
+            System.out.println("Queue is empty.");
+        } else {
+            Node<T> current = head;
+            System.out.print("Queue contents: ");
+            while (current != null) {
+                System.out.print(current.value + " ");
+                current = current.next;
+            }
+            System.out.println();
+        }
+    }
+
+// Main method for testing the queue implementation
+    public static void main(String[] args) {
+        LinkedListQueue<Integer> queue = new LinkedListQueue<>();
+
+        // Add elements to the queue
+        queue.enqueue(10);
+        queue.enqueue(20);
+        queue.enqueue(30);
+
+        // Display queue elements
+        System.out.println("Queue after adding elements:");
+        queue.displayQueue();
+
+        // Peek at the front element
+        System.out.println("Front element: " + queue.peek());
+
+        // Remove an element from the queue
+        queue.dequeue();
+
+        // Display queue elements after removal
+        System.out.println("Queue after removing an element:");
+        queue.displayQueue();
+
+        // Peek at the front element again
+        System.out.println("Front element: " + queue.peek());
+
+        // Remove remaining elements from the queue
+        queue.dequeue();
+        queue.dequeue();
+
+        // Uncommenting the following line will throw NoSuchElementException
+        // queue.dequeue();
+// Display queue elements after all removals
+        System.out.println("Queue after removing all elements:");
+        queue.displayQueue();
+    }
+}
