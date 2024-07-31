@@ -1,0 +1,87 @@
+package merge_quick_sort;
+
+import java.util.Scanner;
+
+public class QuickSort{
+
+    // Method to swap elements at indices i and j
+    static void swap(int[] array, int i, int j) {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    // Method to partition the array
+    static int partition(int[] array, int low, int high) {
+        // Choosing the middle element as the pivot
+        int pivot = array[low + (high - low) / 2];
+        int left = low;
+        int right = high;
+
+        while (left <= right) {
+            // Increment left index while element is less than the pivot
+            while (array[left] < pivot) {
+                left++;
+            }
+            // Decrement right index while element is greater than the pivot
+            while (array[right] > pivot) {
+                right--;
+            }
+            // Swap elements and move indices if needed
+            if (left <= right) {
+                swap(array, left, right);
+                left++;
+                right--;
+            }
+        }
+        return left;
+    }
+
+    // Method to perform quick sort
+    static void quickSort(int[] array, int low, int high) {
+        if (low < high) {
+            // Get the pivot index and partition the array
+            int pivotIndex = partition(array, low, high);
+            // Recursively sort the partitions
+            quickSort(array, low, pivotIndex - 1);
+            quickSort(array, pivotIndex, high);
+        }
+    }
+
+    // Method to print the array
+    public static void printArray(int[] array) {
+        for (int value : array) {
+            System.out.print(value + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input the number of elements
+        System.out.print("Enter the number of elements in the array: ");
+        int n = scanner.nextInt();
+
+        int[] array = new int[n];
+
+        // Input the elements
+        System.out.println("Enter the elements of the array:");
+        for (int i = 0; i < n; i++) {
+            array[i] = scanner.nextInt();
+        }
+
+        // Print the original array
+        System.out.println("Given array is:");
+        printArray(array);
+
+        // Perform quick sort
+        quickSort(array, 0, n - 1);
+
+        // Print the sorted array
+        System.out.println("Sorted array is:");
+        printArray(array);
+
+        scanner.close();
+    }
+}
