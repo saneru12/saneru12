@@ -1,0 +1,172 @@
+// Class representing a node in the binary tree
+class Node {
+    int key;
+    Node left, right;
+
+    public Node(int item) {
+        key = item;
+        left = right = null;
+    }
+}
+
+// Class representing the binary tree
+class BinaryTree {
+    Node root;
+
+    // Constructor to initialize the binary tree
+    BinaryTree() {
+        root = null;
+    }
+
+    // Insert a new node with a given key
+    void insert(int key) {
+        root = insertRec(root, key);
+    }
+
+    // Recursive method to insert a new node with a given key
+    Node insertRec(Node root, int key) {
+        // If the tree is empty, return a new node
+        if (root == null) {
+            root = new Node(key);
+            return root;
+        }
+
+        // Otherwise, recur down the tree
+        if (key < root.key)
+            root.left = insertRec(root.left, key);
+        else if (key > root.key)
+            root.right = insertRec(root.right, key);
+
+        // Return the (unchanged) node pointer
+        return root;
+    }
+
+    // Delete a node with a given key
+    void deleteKey(int key) {
+        root = deleteRec(root, key);
+    }
+
+    // Recursive method to delete a node with a given key
+    Node deleteRec(Node root, int key) {
+        // Base case: if the tree is empty
+        if (root == null) return root;
+
+        // Otherwise, recur down the tree
+        if (key < root.key)
+            root.left = deleteRec(root.left, key);
+        else if (key > root.key)
+            root.right = deleteRec(root.right, key);
+
+        // If key is the same as root's key, then this is the node to be deleted
+        else {
+            // Node with only one child or no child
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+
+            // Node with two children: Get the inorder successor (smallest in the right subtree)
+            root.key = minValue(root.right);
+
+            // Delete the inorder successor
+            root.right = deleteRec(root.right, root.key);
+        }
+
+        return root;
+    }
+
+    // Utility method to find the minimum value node in a tree
+    int minValue(Node root) {
+        int minValue = root.key;
+        while (root.left != null) {
+            minValue = root.left.key;
+            root = root.left;
+        }
+        return minValue;
+    }
+
+    // In-order traversal of the binary tree
+    void inorder() {
+        inorderRec(root);
+    }
+
+    // Recursive method for in-order traversal
+    void inorderRec(Node root) {
+        if (root != null) {
+            inorderRec(root.left);
+            System.out.print(root.key + " ");
+            inorderRec(root.right);
+        }
+    }
+
+    // Pre-order traversal of the binary tree
+    void preorder() {
+        preorderRec(root);
+    }
+
+    // Recursive method for pre-order traversal
+    void preorderRec(Node root) {
+        if (root != null) {
+            System.out.print(root.key + " ");
+            preorderRec(root.left);
+            preorderRec(root.right);
+        }
+    }
+
+    // Post-order traversal of the binary tree
+    void postorder() {
+        postorderRec(root);
+    }
+
+    // Recursive method for post-order traversal
+    void postorderRec(Node root) {
+        if (root != null) {
+            postorderRec(root.left);
+            postorderRec(root.right);
+            System.out.print(root.key + " ");
+        }
+    }public static void main(String[] args) {
+    BinaryTree tree = new BinaryTree();
+
+    /* Insert elements */
+    tree.insert(45);
+    tree.insert(25);
+    tree.insert(75);
+    tree.insert(15);
+    tree.insert(35);
+    tree.insert(65);
+    tree.insert(85);
+    tree.insert(10);
+    tree.insert(30);
+    tree.insert(55);
+    tree.insert(80);
+
+    // Print in-order traversal
+    System.out.println("Inorder traversal:");
+    tree.inorder();
+
+    // Print pre-order traversal
+    System.out.println("\nPreorder traversal:");
+    tree.preorder();
+
+    // Print post-order traversal
+    System.out.println("\nPostorder traversal:");
+    tree.postorder();
+
+    // Delete a node and print the tree after each deletion
+    System.out.println("\n\nDelete 10 (leaf node)");
+    tree.deleteKey(10);
+    System.out.println("Inorder traversal after deletion:");
+    tree.inorder();
+
+    System.out.println("\n\nDelete 25 (node with one child)");
+    tree.deleteKey(25);
+    System.out.println("Inorder traversal after deletion:");
+    tree.inorder();
+
+    System.out.println("\n\nDelete 75 (node with two children)");
+    tree.deleteKey(75);
+    System.out.println("Inorder traversal after deletion:");
+    tree.inorder();
+}
+}
